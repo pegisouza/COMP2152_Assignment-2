@@ -17,9 +17,7 @@ Description: Port Scanner — A tool that scans a target machine for open networ
 # TODO: Import the required modules (Step ii)
 # socket, threading, sqlite3, os, platform, datetime
 
-
 # TODO: Print Python version and OS name (Step iii)
-
 
 # TODO: Create the common_ports dictionary (Step iv)
 # Add a 1-line comment above it explaining what it stores
@@ -52,6 +50,9 @@ class NetworkTool:
     def __init__(self, target):
         self.__target = target  # private property
 
+    # Using @property and @target.setter allows us to control how the private attribute is accessed and modified.
+    # Instead of accessing it directly, we can add validation rules, such as preventing an empty target value.
+    # This helps protect the internal state of the object and avoids invalid data, resulting a safer and more organized code, and easier to maintain.   
     @property
     def target(self):
         return self.__target
@@ -70,9 +71,13 @@ class NetworkTool:
 # Q3: What is the benefit of using @property and @target.setter?
 # TODO: Your 2-4 sentence answer here... (Part 2, Q3)
 
-
 # Q1: How does PortScanner reuse code from NetworkTool?
 # TODO: Your 2-4 sentence answer here... (Part 2, Q1)
+# PortScanner reuses code from NetworkTool by inheriting from it.
+# For example, it uses super().__init__(target) to set the target without writing the same code again.
+# It can also use the getter and setter from the parent class. This makes the code simpler and avoids repetition.
+
+
 
 # TODO: Create the PortScanner child class that inherits from NetworkTool (Step vi)
 # - Constructor: call super().__init__(target), initialize self.scan_results = [], self.lock = threading.Lock()
@@ -91,7 +96,11 @@ class PortScanner(NetworkTool):
 
 # Q4: What would happen without try-except here?
 #     TODO: Your 2-4 sentence answer here... (Part 2, Q4)
-#
+#     Without try-except, the program could crash if a socket error happens while scanning a port.
+#     If the machine is not reachable, the error could stop the whole scan. 
+#     For this reason, using try-except helps the program continue running and show an error message instead.
+
+
 #     - try-except with socket operations
 #     - Create socket, set timeout, connect_ex
 #     - Determine Open/Closed status
@@ -132,7 +141,11 @@ class PortScanner(NetworkTool):
 #
 #     Q2: Why do we use threading instead of scanning one port at a time?
 #     TODO: Your 2-4 sentence answer here... (Part 2, Q2)
-#
+#     We use threading to scan many ports at the same time, which makes the program faster.
+#     If the program scanned one port at a time, it would take much longer, especially for a large range of ports (e.g. 1024 ports sequentially).
+#     This is useful because each port scan may wait for a response before moving to the next one.
+
+
 #     - scan_range(self, start_port, end_port):
 #     - Create threads list
 #     - Create Thread for each port targeting scan_port
@@ -292,4 +305,7 @@ if __name__ == "__main__":
 
 # Q5: New Feature Proposal
 # TODO: Your 2-3 sentence description here... (Part 2, Q5)
-# Diagram: See diagram_studentID.png in the repository root
+# Diagram: See diagram_101530025.png in the repository root
+# One feature I would add is a filter that shows only ports for a specific service, such as HTTP or SSH.
+# This would make the scan results easier to read, especially when many ports are found.
+# It could be implemented using a list comprehension to return only the results that match the selected service name.
