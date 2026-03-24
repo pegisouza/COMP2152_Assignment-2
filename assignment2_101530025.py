@@ -49,7 +49,8 @@ class NetworkTool:
     
     def __init__(self, target):
         self.__target = target  # private property
-
+    # Q3: What is the benefit of using @property and @target.setter?
+    # TODO: Your 2-4 sentence answer here... (Part 2, Q3)
     # Using @property and @target.setter allows us to control how the private attribute is accessed and modified.
     # Instead of accessing it directly, we can add validation rules, such as preventing an empty target value.
     # This helps protect the internal state of the object and avoids invalid data, resulting a safer and more organized code, and easier to maintain.   
@@ -67,22 +68,16 @@ class NetworkTool:
     def __del__(self):
         print("NetworkTool instance destroyed")
 
-
-# Q3: What is the benefit of using @property and @target.setter?
-# TODO: Your 2-4 sentence answer here... (Part 2, Q3)
+# TODO: Create the PortScanner child class that inherits from NetworkTool (Step vi)
+# - Constructor: call super().__init__(target), initialize self.scan_results = [], self.lock = threading.Lock()
+# - Destructor: print "PortScanner instance destroyed", call super().__del__()#
+# - scan_port(self, port):
 
 # Q1: How does PortScanner reuse code from NetworkTool?
 # TODO: Your 2-4 sentence answer here... (Part 2, Q1)
 # PortScanner reuses code from NetworkTool by inheriting from it.
 # For example, it uses super().__init__(target) to set the target without writing the same code again.
 # It can also use the getter and setter from the parent class. This makes the code simpler and avoids repetition.
-
-
-
-# TODO: Create the PortScanner child class that inherits from NetworkTool (Step vi)
-# - Constructor: call super().__init__(target), initialize self.scan_results = [], self.lock = threading.Lock()
-# - Destructor: print "PortScanner instance destroyed", call super().__del__()#
-# - scan_port(self, port):
 class PortScanner(NetworkTool):
     def __init__(self, target):
         super().__init__(target)
@@ -91,15 +86,7 @@ class PortScanner(NetworkTool):
 
     def __del__(self):
         print("PortScanner instance destroyed")
-        super().__del__()  
-
-
-# Q4: What would happen without try-except here?
-#     TODO: Your 2-4 sentence answer here... (Part 2, Q4)
-#     Without try-except, the program could crash if a socket error happens while scanning a port.
-#     If the machine is not reachable, the error could stop the whole scan. 
-#     For this reason, using try-except helps the program continue running and show an error message instead.
-
+        super().__del__()
 
 #     - try-except with socket operations
 #     - Create socket, set timeout, connect_ex
@@ -113,6 +100,11 @@ class PortScanner(NetworkTool):
     
     def scan_port(self, port):
         sock = None
+        # Q4: What would happen without try-except here?
+        #TODO: Your 2-4 sentence answer here... (Part 2, Q4)
+        #Without try-except, the program could crash if a socket error happens while scanning a port.
+        #If the machine is not reachable, the error could stop the whole scan. 
+        #For this reason, using try-except helps the program continue running and show an error message instead.
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(1)
@@ -138,14 +130,6 @@ class PortScanner(NetworkTool):
                 sock.close()
 
 
-#
-#     Q2: Why do we use threading instead of scanning one port at a time?
-#     TODO: Your 2-4 sentence answer here... (Part 2, Q2)
-#     We use threading to scan many ports at the same time, which makes the program faster.
-#     If the program scanned one port at a time, it would take much longer, especially for a large range of ports (e.g. 1024 ports sequentially).
-#     This is useful because each port scan may wait for a response before moving to the next one.
-
-
 #     - scan_range(self, start_port, end_port):
 #     - Create threads list
 #     - Create Thread for each port targeting scan_port
@@ -155,6 +139,11 @@ class PortScanner(NetworkTool):
     def get_open_ports(self):
         return [result for result in self.scan_results if result[1] == "Open"]
 
+    #Q2: Why do we use threading instead of scanning one port at a time?
+    #TODO: Your 2-4 sentence answer here... (Part 2, Q2)
+    #We use threading to scan many ports at the same time, which makes the program faster.
+    #If the program scanned one port at a time, it would take much longer, especially for a large range of ports (e.g. 1024 ports sequentially).
+    #This is useful because each port scan may wait for a response before moving to the next one.
     def scan_range(self, start_port, end_port):
         threads = []
 
@@ -269,10 +258,6 @@ if __name__ == "__main__":
         except ValueError:
             print("Invalid input. Please enter a valid integer.")
 
-
-
-
-
     # TODO: After valid input (Step x)
     # - Create PortScanner object
     # - Print "Scanning {target} from port {start} to {end}..."
@@ -301,7 +286,6 @@ if __name__ == "__main__":
     history_choice = input("Would you like to see past scan history? (yes/no): ").strip().lower()
     if history_choice == "yes":
         load_past_scans()
-
 
 # Q5: New Feature Proposal
 # TODO: Your 2-3 sentence description here... (Part 2, Q5)
